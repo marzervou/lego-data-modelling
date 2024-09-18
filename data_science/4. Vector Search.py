@@ -112,31 +112,24 @@ print(f"index {vs_index_fullname} on table {source_table_fullname} is ready")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC -- This SQL statement enables the Change Data Feed feature for the specified table by setting the table property 'delta.enableChangeDataFeed' to true.
-# MAGIC -- Change Data Feed allows for efficient consumption of changes made to the table, useful for incremental data processing and replication.
-# MAGIC ALTER TABLE `samantha_wise`.`networkrail`.`dim_organisation_unit_conformed_taxonomy` 
-# MAGIC SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
-
-# COMMAND ----------
-
 # Similarity Search
 
 # Define the query text for the similarity search.
-query_text = "Saltley"
-# Optionally, a region can be specified for filtering the results.
-# region = "Southern"
+query_text = "Lunar Year"
 
 # Perform a similarity search on the vector search index.
 # The search uses the query text to find similar entries based on the specified columns.
 # Filters can be applied to narrow down the search results, but are commented out in this example.
 results = vsc.get_index(VECTOR_SEARCH_ENDPOINT_NAME, vs_index_fullname).similarity_search(
   query_text=query_text,
-  columns=['REGION_NAME', 'ROUTE_NAME', 'DELIVERY_UNIT_NAME'],
-  # filters={"REGION_NAME": region},  # Example of how to apply a filter, currently not in use.
-  num_results=1)  # Specify the number of results to return.
+  columns=['product_name', 'category_name', 'product_description'],
+  num_results=3)  # Specify the number of results to return.
 
 # Extract the search results from the response.
 docs = results.get('result', {}).get('data_array', [])
 # The 'docs' variable now contains the search results, ready for further processing or display.
 docs
+
+# COMMAND ----------
+
+

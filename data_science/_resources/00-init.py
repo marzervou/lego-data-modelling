@@ -191,3 +191,9 @@ def wait_for_model_serving_endpoint_to_be_ready(ep_name):
         else:
           break
     raise Exception(f"Couldn't start the endpoint, timeout, please check your endpoint for more details: {state}")
+
+# COMMAND ----------
+
+def display_txt_as_html(txt):
+    txt = txt.replace('\n', '<br/>')
+    displayHTML(f'<div style="max-height: 150px">{txt}</div>')

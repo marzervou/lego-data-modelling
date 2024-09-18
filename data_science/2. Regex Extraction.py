@@ -1,4 +1,17 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC These are some of the tags we want to create:
+# MAGIC
+# MAGIC     - Occasion: (Christmas Gift, Birthday Gift, Holiday Gift, Everyday Play, Special Treat)
+# MAGIC     - Age Range: (Preschool, Kids, Teenagers, Adults)
+# MAGIC     - Theme: (Adventure, Animals, Cars and Trucks, Fantasy, Space, Superheroes)
+# MAGIC     - Skill Level: (Beginner, Intermediate, Advanced)
+# MAGIC     - Play Style:(Building and Construction, Imaginative Play, Action and Adventure, Strategy and Puzzle-Solving)
+# MAGIC     - Franchise:(Star Wars, Harry Potter, Marvel, DC Comics, Disney, Pixar)
+# MAGIC     - Product Type:(Building Sets, Vehicles, Minifigures, Accessories, Books and Comics)
+
+# COMMAND ----------
+
 df_concatenated = spark.read.format("delta").table("shared.lego.silver_data")
 display(df_concatenated)
 
