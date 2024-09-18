@@ -74,3 +74,9 @@ display(df_concatenated)
 # COMMAND ----------
 
 df_concatenated.write.format("delta").mode("overwrite").saveAsTable("shared.lego.silver_data")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC ALTER TABLE `shared`.`lego`.`silver_data` 
+# MAGIC SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
