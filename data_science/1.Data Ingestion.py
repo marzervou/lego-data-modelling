@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %run /Workspace/Users/maria.zervou@databricks.com/lego-data-modelling/data_science/config.py
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC The ingestion code snippet performs the following operations:
 # MAGIC
@@ -10,7 +14,14 @@
 
 # COMMAND ----------
 
-df = spark.read.format("csv").option("header", "true").load("/Volumes/shared/lego/raw_data/product_catalogue_categories.csv")
+raw_data_path = config['raw_data_path']
+catalog = config['catalog']
+dbName = config['dbName']
+silver_data= config['silver_data']
+
+# COMMAND ----------
+
+df = spark.read.format("csv").option("header", "true").load(raw_data_path)
 display(df)
 
 # COMMAND ----------
@@ -73,10 +84,14 @@ display(df_concatenated)
 
 # COMMAND ----------
 
-df_concatenated.write.format("delta").mode("overwrite").saveAsTable("shared.lego.silver_data")
+df_concatenated.write.format("delta").mode("overwrite").saveAsTable(f"{catalog}.{dbName}.{silver_data}")
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC ALTER TABLE `shared`.`lego`.`silver_data` 
 # MAGIC SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
+
+# COMMAND ----------
+
+

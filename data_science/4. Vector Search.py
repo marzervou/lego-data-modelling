@@ -1,40 +1,10 @@
 # Databricks notebook source
-# MAGIC %md
-# MAGIC
-# MAGIC This notebook is focused on setting up and utilizing a Vector Search capability within Databricks.The process is divided into several steps across different cells:
-# MAGIC
-# MAGIC ## Initialization of Vector Search Client (Cell 5):
-# MAGIC
-# MAGIC The Vector Search Client is initialized with notices disabled.
-# MAGIC A check is performed to see if a specific Vector Search endpoint exists. If it doesn't, it is created and set to a "STANDARD" type.
-# MAGIC The notebook waits until the Vector Search endpoint is fully operational, confirmed by a print statement.
-# MAGIC
-# MAGIC ## Preparation for Index Creation (Cell 6):
-# MAGIC
-# MAGIC Necessary libraries for working with Databricks SDK and catalog services are imported.
-# MAGIC Catalog and database names are defined (`shared` and `lego`, respectively).
-# MAGIC Full names for the source table and the vector search index are constructed using the catalog and database names.
-# MAGIC A check is performed to see if the vector search index exists on the specified endpoint. If it doesn't, the index is created from a source Delta table and kept in sync with the source table through a delta sync index. The index creation involves specifying the source table, primary key, embedding source column, and embedding model endpoint name.
-# MAGIC The notebook waits for the index to be fully operational before proceeding, confirmed by a print statement.
-# MAGIC
-# MAGIC ## Similarity Search (Cell 7):
-# MAGIC
-# MAGIC A query text (`"Western"`) is defined for performing a similarity search.
-# MAGIC The similarity search is executed on the vector search index using the query text and specifying columns to find similar entries. An optional filter for the region is commented out.
-# MAGIC The number of results to return is specified.
-# MAGIC The search results are extracted and stored in a variable for further processing or display.
-# MAGIC Throughout the notebook, there's a focus on ensuring that the Vector Search endpoint and index are properly set up and operational before performing a similarity search based on text input to find related entries in the dataset.
-# MAGIC
-# MAGIC [Resources](https://notebooks.databricks.com/demos/llm-rag-chatbot/index.html#)
-
-# COMMAND ----------
-
 # MAGIC %pip install -U --quiet databricks-sdk==0.28.0 databricks-agents mlflow-skinny mlflow mlflow[gateway] databricks-vectorsearch langchain==0.2.1 langchain_core==0.2.5 langchain_community==0.2.4
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
 
-# MAGIC %run /Workspace/Users/maria.zervou@databricks.com/lego-data-modelling/data_science/_resources/00-init 
+# MAGIC %run /Workspace/Users/maria.zervou@databricks.com/lego-data-modelling/data_science/_resources/00-init.py
 
 # COMMAND ----------
 
@@ -42,9 +12,15 @@
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC ALTER TABLE `shared`.`lego`.`gold_data_regex` 
+# MAGIC SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
+
+# COMMAND ----------
+
 # MAGIC %sql 
 # MAGIC -- Loading the data from the 'Create Data' notebook
-# MAGIC SELECT * FROM `shared`.`lego`.`silver_data`
+# MAGIC SELECT * FROM `shared`.`lego`.`gold_data_regex`
 
 # COMMAND ----------
 
@@ -78,8 +54,8 @@ catalog = config['catalog']
 db = config['dbName']
 
 # Construct the full names for the source table and the vector search index using the catalog and database names.
-source_table_fullname = f"{catalog}.{db}.silver_data"
-vs_index_fullname = f"{catalog}.{db}.silver_data_index"
+source_table_fullname = f"{catalog}.{db}.gold_data_regex"
+vs_index_fullname = f"{catalog}.{db}.gold_data_regex_index"
 
 # Check if the vector search index already exists on the specified endpoint.
 if not index_exists(vsc, VECTOR_SEARCH_ENDPOINT_NAME, vs_index_fullname):
@@ -115,14 +91,14 @@ print(f"index {vs_index_fullname} on table {source_table_fullname} is ready")
 # Similarity Search
 
 # Define the query text for the similarity search.
-query_text = "Lunar Year"
+query_text = "explore the world in miniature  world of wonders "
 
 # Perform a similarity search on the vector search index.
 # The search uses the query text to find similar entries based on the specified columns.
 # Filters can be applied to narrow down the search results, but are commented out in this example.
 results = vsc.get_index(VECTOR_SEARCH_ENDPOINT_NAME, vs_index_fullname).similarity_search(
   query_text=query_text,
-  columns=['product_name', 'category_name', 'product_description'],
+  columns=['product_name', 'category_name', 'product_description', 'play_type', 'occasion_type','product_type','theme_type'],
   num_results=3)  # Specify the number of results to return.
 
 # Extract the search results from the response.
@@ -132,4 +108,9 @@ docs
 
 # COMMAND ----------
 
+play with the 3-in-1 forest monkey with his banana and toucan 
+protect the king’s treasure hidden deep in the knights’ castle!
 
+# COMMAND ----------
+
+protect the king’s treasure hidden deep in the knights’ castle! |
