@@ -4,11 +4,11 @@
 
 # COMMAND ----------
 
-# MAGIC %run /Workspace/Users/maria.zervou@databricks.com/lego-data-modelling/data_science/_resources/00-init.py
+# MAGIC %run ./_resources/00-init
 
 # COMMAND ----------
 
-# MAGIC %run /Workspace/Users/maria.zervou@databricks.com/lego-data-modelling/data_science/config.py
+# MAGIC %run ./config
 
 # COMMAND ----------
 
@@ -108,8 +108,9 @@ docs
 
 # COMMAND ----------
 
-play with the 3-in-1 forest monkey with his banana and toucan 
-protect the king’s treasure hidden deep in the knights’ castle!
+# DBTITLE 1,Test cases for vector search
+# play with the 3-in-1 forest monkey with his banana and toucan 
+# protect the king’s treasure hidden deep in the knights’ castle!
 
 # COMMAND ----------
 
